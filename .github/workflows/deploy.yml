@@ -1,0 +1,25 @@
+name: Deploy ke GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Inject ENV to JS
+        run: |
+          echo "window.env = { API_URL: '${{ vars.API_URL }}' };" > env.js
+
+      - name: Deploy ke GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
